@@ -1,0 +1,8 @@
+target/
+*.class
+.git
+.idea
+.vscode
+*.properties.local
+application-local.properties
+.env

@@ -10,7 +10,7 @@ if ($action === 'get_client') {
         echo json_encode(['success' => false, 'message' => 'NIT required']);
         exit;
     }
-    
+    //Buscar cliente por NIT
     $stmt = $pdo->prepare("SELECT id, nombre, ciudad, metodo_pago_preferido FROM clientes WHERE nit = ? LIMIT 1");
     $stmt->execute([$nit]);
     $client = $stmt->fetch();
@@ -29,7 +29,7 @@ if ($action === 'create_client') {
         echo json_encode(['success' => false, 'message' => 'NIT y Nombre son obligatorios']);
         exit;
     }
-    
+    //Guardar cliente
     try {
         $stmt = $pdo->prepare("INSERT INTO clientes (nit, nombre, ciudad, metodo_pago_preferido) VALUES (?, ?, ?, ?)");
         $stmt->execute([

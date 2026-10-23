@@ -1,10 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
-    
+
     // Set current date
     const dateOpts = { day: '2-digit', month: '2-digit', year: 'numeric' };
     document.getElementById('current-date').textContent = new Date().toLocaleDateString('es-GT', dateOpts);
 
-    let exchangeRate = 7.80; // Default fallback
+    let exchangeRate = 7.80; // Valor por defecto para el tipo de cambio
     let currentClientId = null;
     let cart = [];
 
@@ -13,13 +13,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const nameInput = document.getElementById('client-name');
     const cityInput = document.getElementById('client-city');
     const methodInput = document.getElementById('payment-method');
-    
+
     const searchInput = document.getElementById('product-search');
     const searchResults = document.getElementById('product-results');
-    
+
     const tbody = document.getElementById('invoice-tbody');
-    
-    // Fetch Exchange Rate from Banguat WS
+
+    // Obtener tipo de cambio desde Banguat WS
     fetch('banguat_ws.php')
         .then(res => res.json())
         .then(data => {
@@ -40,15 +40,15 @@ document.addEventListener('DOMContentLoaded', () => {
             updateTotals();
         });
 
-    // Search Client
+    // Buscar cliente por NIT
     document.getElementById('btn-search-client').addEventListener('click', () => {
         const nit = nitInput.value.trim();
-        if(!nit) return Swal.fire({ title: 'Atención', text: 'Ingrese un NIT', icon: 'warning' });
+        if (!nit) return Swal.fire({ title: 'Atención', text: 'Ingrese un NIT', icon: 'warning' });
 
         fetch(`api.php?action=get_client&nit=${nit}`)
             .then(res => res.json())
             .then(data => {
-                if(data.success) {
+                if (data.success) {
                     currentClientId = data.data.id;
                     nameInput.value = data.data.nombre;
                     cityInput.value = data.data.ciudad;
@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
     });
 
-    // New Client
+    // Registrar cliente
     document.getElementById('btn-new-client').addEventListener('click', () => {
         Swal.fire({
             title: 'Nuevo Cliente',
@@ -78,7 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const nit = document.getElementById('swal-nit').value.trim();
                 const nombre = document.getElementById('swal-nombre').value.trim();
                 const ciudad = document.getElementById('swal-ciudad').value.trim();
-                
+
                 if (!nit || !nombre) {
                     Swal.showValidationMessage('El NIT y el Nombre son obligatorios');
                     return false;
@@ -92,27 +92,27 @@ document.addEventListener('DOMContentLoaded', () => {
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(result.value)
                 })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.success) {
-                        Swal.fire('¡Cliente Creado!', 'El cliente ha sido registrado exitosamente.', 'success');
-                        
-                        // Auto-fill the form
-                        currentClientId = data.data.id;
-                        nitInput.value = data.data.nit;
-                        nameInput.value = data.data.nombre;
-                        cityInput.value = data.data.ciudad;
-                        methodInput.value = data.data.metodo_pago_preferido;
-                    } else {
-                        Swal.fire('Error', data.message, 'error');
-                    }
-                });
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            Swal.fire('¡Cliente Creado!', 'El cliente ha sido registrado exitosamente.', 'success');
+
+                            // Llenar el formulario automáticamente
+                            currentClientId = data.data.id;
+                            nitInput.value = data.data.nit;
+                            nameInput.value = data.data.nombre;
+                            cityInput.value = data.data.ciudad;
+                            methodInput.value = data.data.metodo_pago_preferido;
+                        } else {
+                            Swal.fire('Error', data.message, 'error');
+                        }
+                    });
             }
         });
     });
 
 
-    // Product Search (Debounced slightly)
+    // Busqueda de productos    
     let searchTimeout;
     searchInput.addEventListener('input', (e) => {
         const term = e.target.value.trim();
@@ -147,14 +147,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 300);
     });
 
-    // Hide search results when clicking outside
+    // Ocultar resultados de busqueda al hacer clic fuera de ellos
     document.addEventListener('click', (e) => {
         if (e.target !== searchInput && e.target !== searchResults) {
             searchResults.style.display = 'none';
         }
     });
 
-    // Add product button click
+    // Agregar producto al carrito
     document.getElementById('btn-add-product').addEventListener('click', () => {
         const term = searchInput.value.trim();
         if (!term) return;
@@ -163,7 +163,7 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(res => res.json())
             .then(data => {
                 if (data.success && data.data.length > 0) {
-                    // Add the first matching product
+                    // Agregar el primer producto encontrado
                     addProductToCart(data.data[0]);
                     searchInput.value = '';
                     searchResults.style.display = 'none';
@@ -172,7 +172,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
     });
-
+    // Agregar producto al carrito
     function addProductToCart(product) {
         const existing = cart.find(item => item.id === product.id);
         if (existing) {
@@ -196,9 +196,9 @@ document.addEventListener('DOMContentLoaded', () => {
         renderCart();
     }
 
-    // Attach to window so onclick works in rendered HTML
-    window.removeProduct = removeProduct; 
-    window.updateQty = function(index, qty) {
+    // Se adjunta a window para que funcione el onclick en el HTML
+    window.removeProduct = removeProduct;
+    window.updateQty = function (index, qty) {
         qty = parseInt(qty);
         if (qty > 0) {
             cart[index].cantidad = qty;
@@ -206,7 +206,7 @@ document.addEventListener('DOMContentLoaded', () => {
             renderCart();
         }
     };
-
+    // Renderizar carrito
     function renderCart() {
         tbody.innerHTML = '';
         cart.forEach((item, idx) => {
@@ -223,7 +223,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         updateTotals();
     }
-
+    // Actualizar totales
     let currentTotals = {};
 
     function updateTotals() {
@@ -246,7 +246,7 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     }
 
-    // Save Invoice
+    // Guardar factura
     document.getElementById('btn-save-invoice').addEventListener('click', () => {
         if (!currentClientId) {
             Swal.fire({ title: 'Atención', text: 'Por favor, busque un cliente primero.', icon: 'warning' });
@@ -269,19 +269,19 @@ document.addEventListener('DOMContentLoaded', () => {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
         })
-        .then(res => res.json())
-        .then(data => {
-            if (data.success) {
-                Swal.fire({ title: '¡Éxito!', text: `Factura guardada exitosamente (ID: ${data.factura_id})`, icon: 'success' });
-                // Clear cart
-                cart = [];
-                renderCart();
-            } else {
-                Swal.fire({ title: 'Error', text: data.message, icon: 'error' });
-            }
-        });
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    Swal.fire({ title: '¡Éxito!', text: `Factura guardada exitosamente (ID: ${data.factura_id})`, icon: 'success' });
+                    // Clear cart
+                    cart = [];
+                    renderCart();
+                } else {
+                    Swal.fire({ title: 'Error', text: data.message, icon: 'error' });
+                }
+            });
     });
 
-    // Trigger initial search for the default NIT in the mockup
+    // Inicia el programa buscando el cliente predeterminado
     document.getElementById('btn-search-client').click();
 });

@@ -1,0 +1,26 @@
+# Environment & Secrets
+.env
+*.env
+application-local.properties
+credentials*
+*.pem
+
+# Angular / Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.angular/
+frontend/.cache/
+
+# Spring Boot / Backend
+backend/target/
+*.class
+backend/.mvn/wrapper/maven-wrapper.jar
+
+# IDE & OS
+.idea/
+.vscode/
+*.iml
+*.log
+Thumbs.db
+Desktop.ini
+.DS_Store
