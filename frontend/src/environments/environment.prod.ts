@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
-  // En producción se sobreescribe con la URL pública de la API Spring Boot (ej. en Render)
-  apiUrl: 'https://facturacion-backend.onrender.com/api'
+  // URL pública de la API Spring Boot desplegada en Render
+  apiUrl: 'https://desarrolloweb-lx80.onrender.com/api'
 };

@@ -8,7 +8,7 @@ USE pos_db;
 
 -- 1. Tabla de Clientes
 CREATE TABLE IF NOT EXISTS clientes (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
     nit VARCHAR(20) UNIQUE NOT NULL,
     nombre VARCHAR(100) NOT NULL,
     ciudad VARCHAR(100),
@@ -16,9 +16,9 @@ CREATE TABLE IF NOT EXISTS clientes (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- 2. Tabla de Productos (Evolucionada para Fase 2 con stock, imagen y AWS S3 key)
+-- 2. Tabla de Productos
 CREATE TABLE IF NOT EXISTS productos (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
     codigo VARCHAR(50) UNIQUE NOT NULL,
     nombre VARCHAR(150) NOT NULL,
     descripcion VARCHAR(255),
@@ -32,8 +32,8 @@ CREATE TABLE IF NOT EXISTS productos (
 
 -- 3. Tabla de Facturas
 CREATE TABLE IF NOT EXISTS facturas (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    cliente_id INT NOT NULL,
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    cliente_id BIGINT NOT NULL,
     fecha DATETIME DEFAULT CURRENT_TIMESTAMP,
     metodo_pago VARCHAR(50) NOT NULL,
     subtotal_usd DECIMAL(10, 2) NOT NULL,
@@ -46,9 +46,9 @@ CREATE TABLE IF NOT EXISTS facturas (
 
 -- 4. Tabla de Detalle de Factura
 CREATE TABLE IF NOT EXISTS factura_detalles (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    factura_id INT NOT NULL,
-    producto_id INT NOT NULL,
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    factura_id BIGINT NOT NULL,
+    producto_id BIGINT NOT NULL,
     cantidad INT NOT NULL,
     precio_unitario DECIMAL(10, 2) NOT NULL,
     subtotal DECIMAL(10, 2) NOT NULL,
@@ -56,10 +56,7 @@ CREATE TABLE IF NOT EXISTS factura_detalles (
     FOREIGN KEY (producto_id) REFERENCES productos(id) ON DELETE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- =====================================================================
--- DATOS INICIALES DE PRUEBA (SEMILLA)
--- =====================================================================
-
+-- Datos Semilla
 INSERT IGNORE INTO clientes (nit, nombre, ciudad, metodo_pago_preferido) VALUES 
 ('1234567-8', 'Juan Pérez', 'Ciudad de Guatemala', 'Efectivo'),
 ('8765432-1', 'María García', 'Antigua Guatemala', 'Tarjeta'),
