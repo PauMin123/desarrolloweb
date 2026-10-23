@@ -58,10 +58,10 @@ CREATE TABLE IF NOT EXISTS factura_detalles (
 
 -- Datos Semilla
 INSERT IGNORE INTO clientes (nit, nombre, ciudad, metodo_pago_preferido) VALUES 
-('1234567-8', 'Juan Pérez', 'Ciudad de Guatemala', 'Efectivo'),
-('8765432-1', 'María García', 'Antigua Guatemala', 'Tarjeta'),
+('1234567-8', 'Paulo Minera', 'Xela', 'Efectivo'),
+('8765432-1', 'Shirley Gamez', 'Quiche', 'Tarjeta'),
 ('CF', 'Consumidor Final', 'Ciudad de Guatemala', 'Efectivo'),
-('9988776-5', 'Distribuidora Los Volcanes S.A.', 'Quetzaltenango', 'Transferencia');
+('1011121-3', 'Kimberly Suhul', 'San Antonio Suchitepequez', 'Efectivo');
 
 INSERT IGNORE INTO productos (codigo, nombre, descripcion, precio_unitario, stock, imagen_url, s3_key) VALUES 
 ('P001-AZ', 'Arroz Blanco Extra 2lb', 'Arroz de grano largo seleccionado premium bolsa 2lb', 2.50, 45, 'https://images.unsplash.com/photo-1586201375761-83865001e31c?w=500&auto=format&fit=crop&q=60', 'seed-arroz.jpg'),
